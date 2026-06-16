@@ -20,7 +20,7 @@ useEffect(() => {
   const incrementVisitor = async () => {
     try {
       await axios.post(
-        "https://localhost:7009/api/visitor/increment"
+        "https://portfolio-api-qtyh.onrender.com/api/visitor/increment"
       );
     } catch (error) {
       console.error(error);
@@ -125,7 +125,7 @@ useEffect(() => {
             onClick={async () => {
               try {
                 await axios.post(
-                  "https://localhost:7009/api/resume/download"
+                  "https://portfolio-api-qtyh.onrender.com/api/resume/download"
                 );
 
                 const link = document.createElement("a");
