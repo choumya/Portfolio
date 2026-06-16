@@ -2,8 +2,30 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { TypeAnimation } from "react-type-animation";
 import { motion } from "framer-motion";
 import profile from "../../assets/profile.png";
+import {
+  FaGithub,
+  FaLinkedin,
+  FaEnvelope
+} from "react-icons/fa";
+import { useEffect } from "react";
+import axios from "axios";
 
 function Hero() {
+useEffect(() => {
+  incrementVisitor();
+}, []);
+
+
+
+  const incrementVisitor = async () => {
+    try {
+      await axios.post(
+        "https://localhost:7009/api/visitor/increment"
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <section
       id="home"
@@ -66,14 +88,57 @@ function Hero() {
               automated, and future-ready systems.
             </p>
 
-            <Button
-            variant="primary"
-            href="/resume.pdf"
-            download
-            className="me-3"
+            <div className="d-flex gap-4 my-4">
+
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=choumya0703@gmail.com"
+              target="_blank"
+              rel="noreferrer"
+              className="hero-social"
             >
+              <FaEnvelope size={28} />
+            </a>
+
+              <a
+                href="https://github.com/choumya"
+                target="_blank"
+                rel="noreferrer"
+                className="hero-social"
+              >
+                <FaGithub size={28} />
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/choumya-m-4b16b3229/"
+                target="_blank"
+                rel="noreferrer"
+                className="hero-social"
+              >
+                <FaLinkedin size={28} />
+              </a>
+
+            </div>
+
+          <Button
+            variant="primary"
+            className="me-3"
+            onClick={async () => {
+              try {
+                await axios.post(
+                  "https://localhost:7009/api/resume/download"
+                );
+
+                const link = document.createElement("a");
+                link.href = "/resume.pdf";
+                link.download = "Choumya_M_Resume.pdf";
+                link.click();
+              } catch (error) {
+                console.error(error);
+              }
+            }}
+          >
             Download Resume
-            </Button>
+          </Button>
 
               <a
                 href="#projects"

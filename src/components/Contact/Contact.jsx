@@ -1,82 +1,141 @@
-import { Container, Card } from "react-bootstrap";
-import {
-  FaGithub,
-  FaLinkedin,
-  FaEnvelope,
-  FaPhone
-} from "react-icons/fa";
+  import { useState } from "react";
+  import { Container, Card, Form, Button, Alert } from "react-bootstrap";
+  import {
+    FaGithub,
+    FaLinkedin,
+    FaEnvelope
+  } from "react-icons/fa";
+  import axios from "axios";
 
-function Contact() {
-  return (
-    <section
-      id="contact"
-      style={{
-        minHeight: "100vh",
-        paddingBottom: "200px"
-      }}
-    >
-      <Container>
+  function Contact() {
+    const [formData, setFormData] = useState({
+      name: "",
+      email: "",
+      subject: "",
+      message: ""
+    });
 
-        <h2 className="section-title">
-          Contact Me
-        </h2>
+    const [success, setSuccess] = useState("");
 
-        <Card className="card-custom p-4">
+    const handleChange = (e) => {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+      });
+    };
 
-          {/* Email */}
-          <div className="mb-4">
-            <FaEnvelope
-              size={24}
-              className="me-3"
-            />
+    const handleSubmit = async (e) => {
+      e.preventDefault();
 
-            <a
-              href="mailto:choumya0703@gmail.com"
-              className="contact-link"
-            >
-              choumya0703@gmail.com
-            </a>
-          </div>
+      try {
+        await axios.post(
+          "https://localhost:7009/api/contact",
+          formData
+        );
 
-          {/* GitHub */}
-          <div className="mb-4">
-            <FaGithub
-              size={24}
-              className="me-3"
-            />
+        setSuccess("Message sent successfully!");
 
-            <a
-              href="https://github.com/choumya"
-              target="_blank"
-              rel="noreferrer"
-              className="contact-link"
-            >
-              GitHub Profile
-            </a>
-          </div>
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: ""
+        });
+      } catch (error) {
+        console.error(error);
+        setSuccess("Failed to send message.");
+      }
+    };
 
-          {/* LinkedIn */}
-          <div className="mb-4">
-            <FaLinkedin
-              size={24}
-              className="me-3"
-            />
+    return (
+      <section
+        id="contact"
+        style={{
+          minHeight: "100vh",
+          paddingBottom: "150px"
+        }}
+      >
+<Container>
 
-            <a
-              href="https://www.linkedin.com/in/choumya-m-4b16b3229/"
-              target="_blank"
-              rel="noreferrer"
-              className="contact-link"
-            >
-              LinkedIn Profile
-            </a>
-          </div>
+  <h2 className="section-title">
+    Contact Me
+  </h2>
 
-        </Card>
+  <div className="contact-container">
 
-      </Container>
-    </section>
-  );
-}
+    <Card className="card-custom p-4">
 
-export default Contact;
+            {success && (
+              <Alert variant="info">
+                {success}
+              </Alert>
+            )}
+
+            <Form onSubmit={handleSubmit}>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Name</Form.Label>
+
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Email</Form.Label>
+
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Subject</Form.Label>
+
+                <Form.Control
+                  type="text"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Message</Form.Label>
+
+                <Form.Control
+                  as="textarea"
+                  rows={5}
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Button
+                variant="primary"
+                type="submit"
+              >
+                Send Message
+              </Button>
+
+            </Form>  
+
+          </Card>
+        </div>
+        </Container>
+      </section>
+    );
+  }
+
+  export default Contact;
